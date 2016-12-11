@@ -4,7 +4,7 @@
 #include "assert.h"
 #include <iostream>
 #include <stdexcept>
-
+#include <math.h>
 #define MAX_MATRIX_SIZE 64
 
 class Matrix {
@@ -51,7 +51,7 @@ class Matrix {
   void printMatrix() {
     std::cout << "| ";
     for(int i = 0; i < (length*height); i++) {
-      std::cout << data[i] << " ";
+      std::cout << roundf(data[i]*100)/100.0 << " ";
 
       if(((i + 1)% length) == 0) {
 	std::cout << "|";
@@ -106,8 +106,8 @@ class Matrix {
  
   Matrix multiply(Matrix right) {
   	
-  	//check that matrices have appropriate dimensions
-  	assert(height == right.length);
+    //check that matrices have appropriate dimensions
+    assert(height == right.length);
   	
     // create temporary array to load into result Matrix
     int r_length = right.length;
@@ -123,12 +123,8 @@ class Matrix {
   	    sum = 0;
   	    for (int j = 0; j < right.height; j++) {
   	      //sum += L[i * Lw + j] * R[j*Rw + k];
-  	      //std::cout << this->data[i * length + j] << "*" << right.data[j*right.length + k] << "=" << this->data[i * length + j] * right.data[j*right.length + k] << std::endl;
   	      sum += this->data[i * length + j] * right.data[j*right.length + k];
-  	      //std::cout << "current sum: " << sum << std::endl;
   	    } 
-  	    
-  	    //std::cout << "Final sum value for index: " << sum << std::endl;
   	    data_temp[result_count] = sum;
   	    result_count++;
   	  }
@@ -147,6 +143,18 @@ class Matrix {
     // make a copy of our data to work on
     Matrix temp = *this;
     double a;
+    bool pivoted;
+    // check that there are no zero's in diagonal, fix
+    std::cout << "checking matrix diagonal" << std::endl;
+    pivoted = temp.swaprows();
+    if(pivoted == true) {
+      std::cout << "matrix after pivot check: " << std::endl;
+    }
+    else {
+      std::cout << "no swapping required" << std::endl;
+    }
+    temp.printMatrix();
+    
         
     for(int i = 0; i < length; i++) {
       for(int j = 0; j < i; j++) {
@@ -154,6 +162,7 @@ class Matrix {
         for(int p = 0; p < j; p++) {
           a -= temp.data[(i*length) + p] * temp.data[(p*length)+j];
         }
+	std::cout << "setting position" << i*length << "," << j << " = " << a << "/" <<  temp.data[(j*length) + j] << std::endl;
         temp.data[(i*length) + j] = a/temp.data[(j*length) + j];
       }
       for(int j = i; j < length; j++) {
@@ -164,6 +173,9 @@ class Matrix {
         temp.data[(length*i)+j] = a;
       }
     }
+
+    std::cout << "LU Decomp Result: " << std::endl;
+    temp.printMatrix();
     
     
     double D = 1.0;
@@ -191,6 +203,8 @@ class Matrix {
     Matrix r = Matrix(length, height, cofactors);
     return r;
   }
+
+  
   
   Matrix transpose() {
     double transpose[length*height];
@@ -204,6 +218,8 @@ class Matrix {
   }
   
   Matrix inverse() {
+    // Check that determinant is not zero
+    assert(this->determinant() != 0);
     Matrix inverse = this->cofactor().transpose();
     double determinant = this->determinant();
     for(int i = 0; i < length*height; i++) {
@@ -249,6 +265,46 @@ class Matrix {
     Matrix r = Matrix(length-1, height-1, det_matrix);
     return r;
   }
+
+  bool swaprows() {
+    // check if 0 is in diagonal, modify matrix if needed
+    bool didswap = false;
+    int swap_row_beg_idx = -1;
+        int curr_row_beg_idx = -1;
+    for(int i = 0; i < length; i++) {
+      if(data[(i*length) + i] == 0) {
+	//found 0 in diagonal, need to swap rows
+	std::cout << "Found a 0 in row " << i << std::endl;
+	curr_row_beg_idx = length*i;
+	for(int j = 0; j < height; j++) {
+	  //check other rows for 0 in same column
+	  //also check that swapping the current row wouldn't put a 0 in the diagonal again
+	  if(data[(i%length)+(height*j)] != 0) {
+	    std::cout << "There's not a zero for our column in row " << (height*j) << std::endl;
+	    //no zero in that column confirmed
+	    //need to check if row element that corresponds to new row's value in the diagonal is a zero
+	    swap_row_beg_idx = length*j;
+	    if(data[curr_row_beg_idx + j] != 0) {
+	      std::cout << "Element at position (" << i << "," << j << ") is not 0, this row is a match!" << std::endl;
+	      //swap rows :)
+	      for(int swap_idx = 0; swap_idx < length; swap_idx++) {
+		std::swap(data[swap_row_beg_idx + swap_idx], data[curr_row_beg_idx + swap_idx]);
+		didswap = true;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    return didswap;
+  }
+	 
+	    
+	    
+    
+
+
+  
   
   int length;
   int height;
