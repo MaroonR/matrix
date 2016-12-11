@@ -140,39 +140,35 @@ class Matrix {
   }
   
   double determinant() {
-    
     if(length == 2) {
       return (data[0]*data[3] - data[2]*data[1]);
     }
     
     // make a copy of our data to work on
-    double* temp = dataCopy();
+    Matrix temp = *this;
     double a;
-    for(int i = 0; i < (length*height); i++) {
-      temp[i] = data[i];
-    }
-    
+        
     for(int i = 0; i < length; i++) {
       for(int j = 0; j < i; j++) {
-        a = temp[(i*length) + j];
+        a = temp.data[(i*length) + j];
         for(int p = 0; p < j; p++) {
-          a -= temp[(i*length) + p] * temp[(p*length)+j];
+          a -= temp.data[(i*length) + p] * temp.data[(p*length)+j];
         }
-        temp[(i*length) + j] = a/temp[(j*length) + j];
+        temp.data[(i*length) + j] = a/temp.data[(j*length) + j];
       }
       for(int j = i; j < length; j++) {
-        a = temp[(i*length) + j];
+        a = temp.data[(i*length) + j];
         for (int p = 0; p < i; p++) {
-          a -= temp[(i*length)+p] * temp[(p*length) + j];
+          a -= temp.data[(i*length)+p] * temp.data[(p*length) + j];
         }
-        temp[(length*i)+j] = a;
+        temp.data[(length*i)+j] = a;
       }
     }
     
     
     double D = 1.0;
     for(int i = 0; i < length; i++)
-      D *= temp[(i*length)+i];
+      D *= temp.data[(i*length)+i];
     return D;
   }
   
@@ -233,15 +229,6 @@ class Matrix {
 
 
  private:
-  double* dataCopy() {
-    // return a copy of our data to work on in place
-    double copy[MAX_MATRIX_SIZE];
-    for(int i = 0; i < length*height; i++) {
-      copy[i] = data[i];
-    }
-    return copy;
-  }
-  
   Matrix getCofactorMatrix(int x, int y) {
     // returns cofactor matrix for a matrix's index
     // do this by removing the elements in the current row and col
