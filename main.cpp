@@ -46,15 +46,15 @@ int main() {
   A.cofactor().printMatrix();
   
   std::cout << "Adjoint (C^T)" << std::endl;
-  //  A.cofactor().transpose().printMatrix();
+   A.cofactor().transpose().printMatrix();
   
   std::cout << "det(A):" << A.determinant() << std::endl;
   
   std::cout << "\nInverse of A: " << std::endl;
-  //A.inverse().printMatrix();
+  A.inverse().printMatrix();
   
   std::cout << "Identity Matrix from these Matrices: " << std::endl;
-  //A.multiply(A.inverse()).printMatrix();
+  A.multiply(A.inverse()).printMatrix();
   
   return 0;
 }
