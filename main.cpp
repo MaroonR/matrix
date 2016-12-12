@@ -5,7 +5,7 @@
 
 
 int main() {
-  int test_case = 3;
+  int test_case = 4;
   Matrix A;
 
   
@@ -26,9 +26,9 @@ int main() {
     std::cout << "Using 3x3 (default)" << std::endl;
     
   
-    double arr33[9] = { 0, 1, 3,
-		        2, 2, 1,
-		        6, 2, 0 };
+    double arr33[9] = { 3, 3, 2,
+		        7, 2, 1,
+		        2, 2, 0 };
 
     A = Matrix(3,3, arr33);
     break;
@@ -38,17 +38,19 @@ int main() {
 
   std::cout << "Matrix A:" << std::endl;
   A.printMatrix();
-  
-  std::cout << "Matrix A * A" << std::endl;
-  A.multiply(A).printMatrix();
-  
+
+  std::cout << "Crout's Method on A" << std::endl;
+  A.crouts_decomposition().printMatrix();
+
+  std::cout << "det(A):" << A.determinant() << std::endl;
+  std::cout << std::endl;
+
   std::cout << "Cofactor Matrix: " << std::endl;
   A.cofactor().printMatrix();
   
   std::cout << "Adjoint (C^T)" << std::endl;
-   A.cofactor().transpose().printMatrix();
+  A.cofactor().transpose().printMatrix();
   
-  std::cout << "det(A):" << A.determinant() << std::endl;
   
   std::cout << "\nInverse of A: " << std::endl;
   A.inverse().printMatrix();

@@ -134,45 +134,64 @@ class Matrix {
     return r;
   	
   }
-  
-  double determinant() {
-    if(length == 2) {
-      return (data[0]*data[3] - data[2]*data[1]);
+
+  Matrix crouts_decomposition() {
+    // A = LU
+    // L is a lower triangular matrix
+    // U is an upper triangular with 1's in the diagonal
+
+    Matrix U = *this;
+    Matrix L = *this;
+
+    double sum = 0;
+    
+    // diagonals in U are 1
+    for(int i = 0; i < length*height; i++) {
+      if(i%(length+1) == 0) U.data[i] = 1;
+      else U.data[i] = 0;
+      L.data[i] = 0;
     }
-    
-    // make a copy of our data to work on
-    Matrix temp = *this;
-    double a;
-    
-    // check that there are no zero's in diagonal, fix
-    //    std::cout << "checking matrix diagonal" << std::endl;
-    bool swapped = temp.swaprows();
-    
-    
-        
-    for(int i = 0; i < length; i++) {
-      for(int j = 0; j < i; j++) {
-        a = temp.data[(i*length) + j];
-        for(int p = 0; p < j; p++) {
-          a -= temp.data[(i*length) + p] * temp.data[(p*length)+j];
-        }
-        temp.data[(i*length) + j] = a/temp.data[(j*length) + j];
+
+    for (int j = 0; j < length; j++) {
+      for(int i = j; i < length; i++) {
+	sum = 0;
+	for (int k = 0; k < j; k++) {
+	  sum += (L.data[(i*length) + k] * U.data[(k*length) + j]);
+	}
+	L.data[(i*length) + j] = data[(i*length) + j] - sum;
       }
-      for(int j = i; j < length; j++) {
-        a = temp.data[(i*length) + j];
-        for (int p = 0; p < i; p++) {
-          a -= temp.data[(i*length)+p] * temp.data[(p*length) + j];
-        }
-        temp.data[(length*i)+j] = a;
+
+      for (int i = j; i < length; i++) {
+	sum = 0;
+	for(int k = 0; k < j; k++) {
+	  sum += (L.data[(j*length) + k] * U.data[(k*length) + i]);
+	}
+	if (L.data[(j*length) + j] == 0) {
+	  std::cout << "det(L) close to 0!" << std::endl;
+	}
+	U.data[(j*length) + i] = (data[(length*j) + i] - sum)/L.data[(j*length) + j];
       }
     }
 
-    
-    double D = 1.0;
-    for(int i = 0; i < length; i++)
-      D *= temp.data[(i*length)+i];
-    if(swapped) D = -D;
-    return D;
+    return L;    
+  }
+  
+  double determinant() {
+    // This function expects either a 2x2 matrix or a
+    // diagonalized matrix (i.e., an L or a U matrix)
+    if(length == 2) {
+      return (data[0]*data[3] - data[2]*data[1]);
+    }
+    else {
+      Matrix r = *this;
+      r = r.crouts_decomposition();
+      double det = 1;
+      for(int i = 0; i < length; i++) {
+      //      std::cout << "current multiplicand: " << data[(i*length) + i] << std::endl;
+	det *= r.data[(i*length) + i];
+      }
+      return det;
+    }
   }
   
   Matrix cofactor() {
@@ -254,6 +273,9 @@ class Matrix {
     }
     
     Matrix r = Matrix(length-1, height-1, det_matrix);
+    //    std::cout << "currect cofactor matrix (det(c) =  " << r.determinant() << std::endl;
+    //r.printMatrix();
+    
     return r;
   }
 
@@ -261,11 +283,11 @@ class Matrix {
     // check if 0 is in diagonal, modify matrix if needed
     bool swaps = false;
     int swap_row_beg_idx = -1;
-        int curr_row_beg_idx = -1;
+    int curr_row_beg_idx = -1;
     for(int i = 0; i < length; i++) {
       if(data[(i*length) + i] == 0) {
 	//found 0 in diagonal, need to swap rows
-	//std::cout << "Found a 0 in row " << i << std::endl;
+	std::cout << "Found a 0 in row " << i << std::endl;
 	curr_row_beg_idx = length*i;
 	for(int j = 0; j < height; j++) {
 	  //check other rows for 0 in same column
@@ -287,6 +309,8 @@ class Matrix {
 	}
       }
     }
+    std::cout << "Is this right?" << std::endl;
+    this->printMatrix();
     return swaps;
   }
 	 
