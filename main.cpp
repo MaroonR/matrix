@@ -5,7 +5,7 @@
 
 
 int main() {
-  int test_case = 4;
+  int test_case = 3;
   Matrix A;
 
   
