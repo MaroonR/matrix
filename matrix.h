@@ -26,7 +26,13 @@ class Matrix {
 
   Matrix& operator+( const Matrix& ); 
 
+  Matrix subtract(const Matrix);
+
+  Matrix& operator-( const Matrix& );
+  
   Matrix multiply(Matrix);
+
+  Matrix& operator*( const Matrix& );
 
   Matrix crouts_decomposition();
 
@@ -46,9 +52,7 @@ class Matrix {
   
   void setHeight(int);
 
-  Matrix getCofactorMatrix(int, int);
-  
-  bool swaprows();
+
 
  private:
   
