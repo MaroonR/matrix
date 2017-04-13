@@ -31,14 +31,10 @@ class Matrix {
   Matrix& operator-( const Matrix& );
   
   Matrix multiply(Matrix);
+  
+  Matrix division(Matrix);
 
   Matrix& operator*( const Matrix& );
-
-  Matrix crouts_decomposition();
-
-  double determinant(); 
-  
-  Matrix cofactor();
 
   Matrix transpose();
     
@@ -52,8 +48,6 @@ class Matrix {
   
   void setHeight(int);
 
-
-
  private:
   
   int length;
@@ -64,5 +58,3 @@ class Matrix {
 
 
 #endif
-
-
