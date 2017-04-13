@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "Matrix.h"
 
 Matrix::Matrix() {
   length = 1;
@@ -27,7 +27,7 @@ Matrix& Matrix::operator=( const Matrix& other ) {
   return *this;
 }
 
-// Default Print Function
+// Default Print Function -- all print statements need to be removed. 
 void Matrix::printMatrix() {
   std::cout << "| ";
   double curr_val;
@@ -146,7 +146,27 @@ Matrix& Matrix::operator*( const Matrix& other ) {
   }
   return *this;
 }
-      
+
+Matrix Matrix::division(Matrix right) {
+  // element division
+  //check that matrices have appropriate dimensions
+  assert(height == right.height);
+  assert(length == right.length);
+  
+  // create temporary array to load into resultant Matrix
+  
+  double data_temp[length*right.height];
+  double quotient = 0;
+  
+  for(int i = 0; i < height * right.length; i++) {
+    if(right.data[i] == 0){
+      data_temp[i] = 0;
+    }
+    else data_temp[i] = data[i]/right.data[i];
+  }
+  Matrix r = Matrix(right.length, height, data_temp);
+  return r;
+}      
   
 Matrix Matrix::transpose() {
   double transpose[length*height];
