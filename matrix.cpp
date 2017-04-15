@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "Matrix.h"
 
 
 Matrix::Matrix() {
@@ -27,6 +27,7 @@ Matrix& Matrix::operator=( const Matrix& other ) {
   std::memcpy(this->data, other.data, width*height*sizeof(double));
   return *this;
 }
+
 
 // Default Print Function -- all print statements need to be removed.
 void Matrix::printMatrix() {
@@ -153,6 +154,7 @@ Matrix& Matrix::operator*( const Matrix& other ) {
   return *this;
 }
 
+<<<<<<< HEAD
 Matrix Matrix::divide(Matrix right) {
   // element division
   //check that matrices have appropriate dimensions

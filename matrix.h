@@ -30,8 +30,9 @@ class Matrix {
   Matrix& operator-( const Matrix& );
   
   Matrix multiply(Matrix);
+
   Matrix divide(Matrix);
-  
+
   Matrix& operator*( const Matrix& );
 
   Matrix transpose();
@@ -43,6 +44,7 @@ class Matrix {
   void setWidth(int);
   int getHeight();
   void setHeight(int);
+
  private:
   int width;
   int height;
