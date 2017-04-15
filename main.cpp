@@ -74,11 +74,21 @@ void test_function(int test_case) {
 }
 
 int main() {
-
+  /*
   std::cout << "Beginning... " << std::endl;
   for(int i = 3; i < 7; i++) {
     test_function(i);
   }
+  */
+  std::cout << "testing concatenation... " << std::endl;
+  double arrA[4] = {0, 1, 2, 3};
+  Matrix A = Matrix(4,1,arrA);
+  double arrB[4] = {4,5,7,8};
+  Matrix B = Matrix(4,1, arrB);
+  A.printMatrix();
+  B.printMatrix();
+  std::cout << "testing concatenation... " << std::endl;
+  A.concatenate(B,1).printMatrix();
 
   return 0;
 
