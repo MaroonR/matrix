@@ -154,7 +154,7 @@ Matrix& Matrix::operator*( const Matrix& other ) {
   return *this;
 }
 
-<<<<<<< HEAD
+
 Matrix Matrix::divide(Matrix right) {
   // element division
   //check that matrices have appropriate dimensions
@@ -271,16 +271,11 @@ Matrix Matrix::concatenate(const Matrix right, int axis) {
   // of size left.size + right.size
   
   int new_size = (height*width) + (right.width * right.height);
-  std::cout << height << width << right.width << right.height << std::endl;
   double data_temp[new_size];
-
-  std::cout << "newsize: " << new_size << std::endl;
   
   int new_height = height;
   int new_width = width;
-
-  int temp = 0;
-
+  
   if(axis == 0){
     /* This concatenation is far faster than appending to other axis in the
        one-array matrix implementation  */
@@ -290,19 +285,18 @@ Matrix Matrix::concatenate(const Matrix right, int axis) {
     new_height = height + right.height;
   }
   if(axis == 1) {
-    for(int i = 0; i < height; i++) {
-      std::cout << "adding from left matrix: "<< data[i] << std::endl;
-      data_temp[i] = data[i];
-      for(int k = 0; k < width; k++) {
-	data_temp[k] = data[k];
-	//move i to end of row:
-	if(i%width == 1 || (width == 1)) {
-	  // move j to end of right's row
-	  for(int j = 0; j < right.width; j++) {
-	    std::cout << "adding from right matrix: "<< right.data[temp] << std::endl;
-	    data_temp[j+i+1] = right.data[j];
-	  }
+    int curr_row = 0;
+    int temp = 0;
+    for(int i = 0; i < new_size; i++) { //we're only go append new_size elements 
+      data_temp[i] = data[temp];
+      temp++;
+      if(i%width == 1 || (width == 1)) {
+	// move j to end of right's row
+	for(int j = 0; j < right.width; j++) {
+	  data_temp[j+i+1] = right.data[j + (right.width*curr_row)];
+	  i++;
 	}
+	curr_row++;
       }
     }
     new_width = new_width + right.width;

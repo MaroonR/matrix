@@ -88,7 +88,7 @@ int main() {
   A.printMatrix();
   B.printMatrix();
   std::cout << "testing concatenation... " << std::endl;
-  A.concatenate(B,1).printMatrix();
+  A.concatenate(B,0).printMatrix();
 
   return 0;
 
