@@ -1,4 +1,4 @@
-#include "Matrix.h"
+#include "matrix.h"
 
 
 Matrix::Matrix() {
@@ -277,8 +277,6 @@ Matrix Matrix::concatenate(const Matrix right, int axis) {
   int new_width = width;
   
   if(axis == 0){
-    /* This concatenation is far faster than appending to other axis in the
-       one-array matrix implementation  */
     assert(width == right.width);
     std::copy(this->data, this->data+(width*height), data_temp);
     std::copy(right.data, right.data+(right.width*right.height), data_temp+(width*height));
@@ -287,14 +285,14 @@ Matrix Matrix::concatenate(const Matrix right, int axis) {
   if(axis == 1) {
     int curr_row = 0;
     int temp = 0;
-    for(int i = 0; i < new_size; i++) { //we're only go append new_size elements 
+    for(int i = 0; i < new_size; i++) {
       data_temp[i] = data[temp];
       temp++;
-      if(i%width == 1 || (width == 1)) {
-	// move j to end of right's row
+      if(i%width == width-1) { 
 	for(int j = 0; j < right.width; j++) {
-	  data_temp[j+i+1] = right.data[j + (right.width*curr_row)];
+	  data_temp[i+1] = right.data[j + (right.width*curr_row)];
 	  i++;
+	  
 	}
 	curr_row++;
       }

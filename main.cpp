@@ -81,10 +81,10 @@ int main() {
   }
   */
   std::cout << "testing concatenation... " << std::endl;
-  double arrA[4] = {0, 1, 2, 3};
-  Matrix A = Matrix(4,1,arrA);
-  double arrB[4] = {4,5,7,8};
-  Matrix B = Matrix(4,1, arrB);
+  double arrA[4] = {1,1,1,1};
+  Matrix A = Matrix(2,2,arrA);
+  double arrB[4] = {2,2,2,2};
+  Matrix B = Matrix(2,2, arrB);
   A.printMatrix();
   B.printMatrix();
   std::cout << "testing concatenation... " << std::endl;
